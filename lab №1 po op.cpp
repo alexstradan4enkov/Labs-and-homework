@@ -24,7 +24,7 @@ int main(){
             min=num[i];
         }
     }cout<<"минимальный элемент: "<<min<<endl;
-     for (int j=0;j<9;j++){   for (int i=0;i<9;i++) {
+     for (int j=0;j<10;j++){   for (int i=0;i<9;i++) {
             if (num[i]>num[i+1]) {
                 int h=num[i];
                 num[i]=num[i+1];
