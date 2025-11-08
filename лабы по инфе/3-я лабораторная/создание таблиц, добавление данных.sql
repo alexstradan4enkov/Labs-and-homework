@@ -1,6 +1,6 @@
 CREATE TABLE products (
 	id INT PRIMARY KEY,
-	name VARCHAR(100) NOT FULL,
+	name VARCHAR(100) NOT NULL,
 	price FLOAT
 );
 CREATE TABLE orders (
@@ -15,4 +15,5 @@ CREATE TABLE order_items (
 	total_price FLOAT,
 	FOREIGN KEY (order_id) REFERENCES orders(order_id),
 	FOREIGN KEY (product_id) REFERENCES products(id)
+
 );
