@@ -1,3 +1,3 @@
 echo "server listen 8888"
-nc -1 -p 8888
+nc -l -p 8888
 
