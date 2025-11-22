@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-// функция для добавления товаров в файл
+// С„СѓРЅРєС†РёСЏ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ С‚РѕРІР°СЂРѕРІ РІ С„Р°Р№Р»
 void addpr() {
     setlocale(LC_ALL, "RU");
     ofstream file("orders.txt", ios::app);
@@ -11,37 +11,37 @@ void addpr() {
     int quantity;
     double price;
 
-    cout << "ввод товаров (для выхода введите 'стоп' в названии):" << endl;
+    cout << "РІРІРѕРґ С‚РѕРІР°СЂРѕРІ: " << endl;
 
-    bool continueInput = true; // флаг для продолжения ввода
+    bool continueInput = true; // С„Р»Р°Рі РґР»СЏ РїСЂРѕРґРѕР»Р¶РµРЅРёСЏ РІРІРѕРґР°
 
     while (continueInput) {
-        cout << "название товара: ";
+        cout << "РЅР°Р·РІР°РЅРёРµ С‚РѕРІР°СЂР°: ";
         getline(cin, name);
 
-        if (name == "стоп" || name.empty()) {
-            continueInput = false; // меняем флаг на false для выхода из цикла
+        if (name == "СЃС‚РѕРї" || name.empty()) {
+            continueInput = false; // РјРµРЅСЏРµРј С„Р»Р°Рі РЅР° false РґР»СЏ РІС‹С…РѕРґР° РёР· С†РёРєР»Р°
         }
         else {
-            cout << "количество: ";
+            cout << "РєРѕР»РёС‡РµСЃС‚РІРѕ: ";
             cin >> quantity;
-            cout << "цена: ";
+            cout << "С†РµРЅР°: ";
             cin >> price;
-            cin.ignore(); // очистка буфера
+            cin.ignore(); // РѕС‡РёСЃС‚РєР° Р±СѓС„РµСЂР°
 
-            // запись в файл
+            // Р·Р°РїРёСЃСЊ РІ С„Р°Р№Р»
             file << name << " " << quantity << " " << price << endl;
 
-            // запись в output.txt
+            // Р·Р°РїРёСЃСЊ РІ output.txt
             ofstream out("output.txt", ios::app);
-            out << "добавлен: " << name << " " << quantity << " " << price << endl;
+            out << "РґРѕР±Р°РІР»РµРЅ: " << name << " " << quantity << " " << price << endl;
             out.close();
         }
     }
     file.close();
 }
 
-// функция для поиска товара
+// С„СѓРЅРєС†РёСЏ РґР»СЏ РїРѕРёСЃРєР° С‚РѕРІР°СЂР°
 void searchpr() {
     setlocale(LC_ALL, "RU");
     ifstream file("orders.txt");
@@ -50,30 +50,30 @@ void searchpr() {
     double price;
     bool found = false;
 
-    cout << "введите название для поиска: ";
+    cout << "РІРІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ РґР»СЏ РїРѕРёСЃРєР°: ";
     getline(cin, searchn);
 
     ofstream out("output.txt", ios::app);
-    out << "поиск: " << searchn << endl;
+    out << "РїРѕРёСЃРє: " << searchn << endl;
 
     while (file >> name >> quantity >> price) {
         if (name == searchn) {
-            cout << "найдено: " << name << " " << quantity << " " << price << endl;
-            out << "найдено: " << name << " " << quantity << " " << price << endl;
+            cout << "РЅР°Р№РґРµРЅРѕ: " << name << " " << quantity << " " << price << endl;
+            out << "РЅР°Р№РґРµРЅРѕ: " << name << " " << quantity << " " << price << endl;
             found = true;
         }
     }
 
     if (!found) {
-        cout << "товар не найден!" << endl;
-        out << "товар не найден!" << endl;
+        cout << "С‚РѕРІР°СЂ РЅРµ РЅР°Р№РґРµРЅ!" << endl;
+        out << "С‚РѕРІР°СЂ РЅРµ РЅР°Р№РґРµРЅ!" << endl;
     }
 
     file.close();
     out.close();
 }
 
-// функция для показа всех товаров
+// С„СѓРЅРєС†РёСЏ РґР»СЏ РїРѕРєР°Р·Р° РІСЃРµС… С‚РѕРІР°СЂРѕРІ
 void showallpr() {
     setlocale(LC_ALL, "RU");
     ifstream file("orders.txt");
@@ -81,9 +81,9 @@ void showallpr() {
     int quantity;
     double price;
 
-    cout << "все товары:" << endl;
+    cout << "РІСЃРµ С‚РѕРІР°СЂС‹:" << endl;
     ofstream out("output.txt", ios::app);
-    out << "показать все товары:" << endl;
+    out << "РїРѕРєР°Р·Р°С‚СЊ РІСЃРµ С‚РѕРІР°СЂС‹:" << endl;
 
     while (file >> name >> quantity >> price) {
         cout << name << " " << quantity << " " << price << endl;
@@ -94,7 +94,7 @@ void showallpr() {
     out.close();
 }
 
-// функция для показа товаров по цене
+// С„СѓРЅРєС†РёСЏ РґР»СЏ РїРѕРєР°Р·Р° С‚РѕРІР°СЂРѕРІ РїРѕ С†РµРЅРµ
 void showbyprice() {
     setlocale(LC_ALL, "RU");
     ifstream file("orders.txt");
@@ -102,13 +102,13 @@ void showbyprice() {
     int quantity;
     double price, maxprice;
 
-    cout << "введите максимальную цену: ";
+    cout << "РІРІРµРґРёС‚Рµ РјР°РєСЃРёРјР°Р»СЊРЅСѓСЋ С†РµРЅСѓ: ";
     cin >> maxprice;
     cin.ignore();
 
-    cout << "товары до " << maxprice << " руб.:" << endl;
+    cout << "С‚РѕРІР°СЂС‹ РґРѕ " << maxprice << " СЂСѓР±.:" << endl;
     ofstream out("output.txt", ios::app);
-    out << "товары до " << maxprice << " руб.:" << endl;
+    out << "С‚РѕРІР°СЂС‹ РґРѕ " << maxprice << " СЂСѓР±.:" << endl;
 
     while (file >> name >> quantity >> price) {
         if (price <= maxprice) {
@@ -121,27 +121,28 @@ void showbyprice() {
     out.close();
 }
 
-// главное меню
+// РіР»Р°РІРЅРѕРµ РјРµРЅСЋ
 int main() {
     setlocale(LC_ALL, "RU");
     int choice;
+    ofstream clear1("orders.txt");
+    clear1.close();
 
-    // очищаем output.txt при запуске
-    ofstream clear("output.txt");
-    clear.close();
+    ofstream clear2("output.txt");
+    clear2.close();
 
-    bool programRunning = true; // флаг для работы программы
+    bool programRunning = true; // С„Р»Р°Рі РґР»СЏ СЂР°Р±РѕС‚С‹ РїСЂРѕРіСЂР°РјРјС‹
 
     while (programRunning) {
-        cout << "\n=== МЕНЮ ===" << endl;
-        cout << "1 - добавить товары" << endl;
-        cout << "2 - поиск товара" << endl;
-        cout << "3 - показать все" << endl;
-        cout << "4 - товары по цене" << endl;
-        cout << "5 - выход" << endl;
-        cout << "выберите: ";
+        cout << "\n    РјРµРЅСЋ    " << endl;
+        cout << "1 - РґРѕР±Р°РІРёС‚СЊ С‚РѕРІР°СЂС‹" << endl;
+        cout << "2 - РїРѕРёСЃРє С‚РѕРІР°СЂР°" << endl;
+        cout << "3 - РїРѕРєР°Р·Р°С‚СЊ РІСЃРµ" << endl;
+        cout << "4 - С‚РѕРІР°СЂС‹ РїРѕ С†РµРЅРµ" << endl;
+        cout << "5 - РІС‹С…РѕРґ" << endl;
+        cout << "РІС‹Р±РµСЂРёС‚Рµ: ";
         cin >> choice;
-        cin.ignore(); // пропускаем пробельные символы
+        cin.ignore(); // РїСЂРѕРїСѓСЃРєР°РµРј РїСЂРѕР±РµР»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹
 
         switch (choice) {
         case 1:
@@ -157,11 +158,11 @@ int main() {
             showbyprice();
             break;
         case 5:
-            cout << "выход!" << endl;
-            programRunning = false; // меняем флаг для выхода из цикла
+            cout << "РІС‹С…РѕРґ!" << endl;
+            programRunning = false; // РјРµРЅСЏРµРј С„Р»Р°Рі РґР»СЏ РІС‹С…РѕРґР° РёР· С†РёРєР»Р°
             break;
         default:
-            cout << "неверный выбор!" << endl;
+            cout << "РЅРµРІРµСЂРЅС‹Р№ РІС‹Р±РѕСЂ!" << endl;
         }
     }
     return 0;
