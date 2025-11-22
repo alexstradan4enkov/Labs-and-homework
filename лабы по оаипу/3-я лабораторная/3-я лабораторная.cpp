@@ -142,7 +142,7 @@ int main() {
         cout << "5 - выход" << endl;
         cout << "выберите: ";
         cin >> choice;
-        cin.ignore(); // пропускаем пробельные символы
+        cin.ignore(); // пропускаем пробелы
 
         switch (choice) {
         case 1:
@@ -167,3 +167,4 @@ int main() {
     }
     return 0;
 }
+
