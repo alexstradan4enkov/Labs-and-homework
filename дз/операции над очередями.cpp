@@ -5,13 +5,13 @@
 
 // 1)
 
-// Функция добавления человека в очередь
+// функция добавления человека в очередь
 void addToQueue(std::queue<std::string>& queue, const std::string& person) {
     queue.push(person);
     std::cout << person << " встал(а) в очередь." << std::endl;
 }
 
-// Функция обработки первого человека в очереди
+// функция обработки первого человека в очереди
 void processQueue(std::queue<std::string>& queue) {
     if (queue.empty()) {
         std::cout << "Очередь пуста. Некого обрабатывать." << std::endl;
@@ -25,13 +25,13 @@ void processQueue(std::queue<std::string>& queue) {
 
 //2)
 
-// Функция добавления события в очередь
+// функция добавления события в очередь
 void addEvent(std::queue<std::string>& eventQueue, const std::string& event) {
     eventQueue.push(event);
     std::cout << "Добавлено событие: " << event << std::endl;
 }
 
-// Функция обработки событий из очереди
+// функция обработки событий из очереди
 void processEvents(std::queue<std::string>& eventQueue) {
     if (eventQueue.empty()) {
         std::cout << "Очередь событий пуста." << std::endl;
@@ -45,17 +45,17 @@ void processEvents(std::queue<std::string>& eventQueue) {
 
 //3)
 
-// Структура для хранения информации о заказе
+// структура для хранения информации о заказе
 struct Order {
     std::string customerName;
     std::vector<std::string> items;
 
-    // Конструктор для удобного создания заказов
+    // конструктор для удобного создания заказов
     Order(const std::string& name, const std::vector<std::string>& orderItems)
         : customerName(name), items(orderItems) {
     }
 
-    // Метод для вывода информации о заказе
+    // метод для вывода информации о заказе
     void print() const {
         std::cout << "Заказ от: " << customerName << std::endl;
         std::cout << "Товары: ";
@@ -67,14 +67,14 @@ struct Order {
     }
 };
 
-// Функция добавления заказа в очередь
+// функция добавления заказа в очередь
 void addOrder(std::queue<Order>& orderQueue, const Order& newOrder) {
     orderQueue.push(newOrder);
     std::cout << "Заказ добавлен в очередь: ";
     newOrder.print();
 }
 
-// Функция обработки заказа из очереди
+// функция обработки заказа из очереди
 void processOrder(std::queue<Order>& orderQueue) {
     if (orderQueue.empty()) {
         std::cout << "Очередь заказов пуста." << std::endl;
@@ -117,21 +117,21 @@ int main() {
     std::cout << "\n третья задача" << std::endl;
     std::queue<Order> orderQueue;
 
-    // Создаем несколько заказов
+    // создаем несколько заказов
     Order order1("Петров Иван", { "Ноутбук", "Мышка", "Чехол" });
     Order order2("Сидорова Анна", { "Книга", "Ручка" });
     Order order3("Кузнецов Сергей", { "Телефон", "Наушники", "Зарядное устройство", "Чехол" });
 
-    // Добавляем заказы в очередь
+    // добавляем заказы в очередь
     addOrder(orderQueue, order1);
     addOrder(orderQueue, order2);
     addOrder(orderQueue, order3);
 
-    // Обрабатываем заказы
+    // обрабатываем заказы
     processOrder(orderQueue);
     processOrder(orderQueue);
     processOrder(orderQueue);
-    processOrder(orderQueue); // Попытка обработать пустую очередь
+    processOrder(orderQueue); // попытка обработать пустую очередь
 
     return 0;
 }
