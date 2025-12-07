@@ -331,4 +331,5 @@ int main() {
     cout << "Все сразу: " << time2.count() << " мс" << endl;
     return 0;
 }
+
 */
