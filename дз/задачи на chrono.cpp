@@ -14,7 +14,6 @@ long long calculate_sum(int n) {
 int main() {
     // устанавливаем локаль для русских символов
     std::setlocale(LC_ALL, "ru_RU.UTF-8");
-
     std::cout << "=== измерение времени выполнения функции ===\n";
 
     int n;
