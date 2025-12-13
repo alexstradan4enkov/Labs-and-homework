@@ -1,5 +1,5 @@
 
--- Таблица товаров
+-- таблица товаров
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -7,13 +7,13 @@ CREATE TABLE products (
     product_type VARCHAR(50) DEFAULT 'physical'
 );
 
--- Таблица заказов
+-- таблица заказов
 CREATE TABLE orders (
     order_id SERIAL PRIMARY KEY,
     order_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
--- Таблица позиций заказа
+-- таблица позиций заказа
 CREATE TABLE order_items (
     order_item_id SERIAL PRIMARY KEY,
     order_id INTEGER REFERENCES orders(order_id) ON DELETE CASCADE,
@@ -22,12 +22,12 @@ CREATE TABLE order_items (
     total_price DECIMAL(10, 2) NOT NULL
 );
 
--- Создаем индексы для ускорения
+-- создаем индексы для ускорения
 CREATE INDEX idx_order_date ON orders(order_date);
 CREATE INDEX idx_product_id ON order_items(product_id);
 CREATE INDEX idx_order_id ON order_items(order_id);
 
--- Тестовые данные
+-- тестовые данные
 INSERT INTO products (name, price, product_type) VALUES
 ('Laptop', 50000.00, 'physical'),
 ('Keyboard', 1500.50, 'physical'),
@@ -46,3 +46,4 @@ INSERT INTO order_items (order_id, product_id, quantity, total_price) VALUES
 (2, 2, 2, 3001.00),
 (2, 5, 1, 3500.00),
 (3, 4, 5, 1499.95);
+
