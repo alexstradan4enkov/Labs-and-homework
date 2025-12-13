@@ -1,7 +1,6 @@
 #include <iostream>
 #include <pqxx/pqxx>
 #include <fstream>
-#include <windows.h>
 using namespace std;
 
 void logAction(const string& msg)
@@ -30,7 +29,7 @@ public:
             txn.quote(type()) + ")"
         );
         txn.commit();
-        logAction("Добавлен продукт: " + name);
+        logAction("Г„Г®ГЎГ ГўГ«ГҐГ­ ГЇГ°Г®Г¤ГіГЄГІ: " + name);
     }
 };
 
@@ -53,7 +52,7 @@ int createOrder(pqxx::connection& c)
         "INSERT INTO orders (order_date) VALUES (CURRENT_DATE) RETURNING order_id"
     );
     txn.commit();
-    logAction("Создан заказ");
+    logAction("Г‘Г®Г§Г¤Г Г­ Г§Г ГЄГ Г§");
     return r[0][0].as<int>();
 }
 
@@ -74,7 +73,7 @@ void addOrderItem(pqxx::connection& c, int oid, int pid, int qty)
         txn.quote(total) + ")"
     );
     txn.commit();
-    logAction("Добавлена позиция заказа");
+    logAction("Г„Г®ГЎГ ГўГ«ГҐГ­Г  ГЇГ®Г§ГЁГ¶ГЁГї Г§Г ГЄГ Г§Г ");
 }
 
 void revenue(pqxx::connection& c)
@@ -88,13 +87,11 @@ void revenue(pqxx::connection& c)
 
     for (auto row : r)
         cout << row["name"].c_str()
-        << " | Выручка: " << row["revenue"].as<double>() << endl;
+        << " | Г‚Г»Г°ГіГ·ГЄГ : " << row["revenue"].as<double>() << endl;
 }
 
 int main()
 {
-    SetConsoleCP(1251);   // ввод в UTF-8
-    SetConsoleOutputCP(1251); // вывод в UTF-8
     setlocale(LC_ALL, "Russian");
     try {
         pqxx::connection c(
@@ -105,7 +102,7 @@ int main()
 
         int ch;
         while (true) {
-            cout << "\n1 Добавить товар\n2 Создать заказ\n3 Добавить позицию\n4 Выручка\n0 Выход\n> ";
+            cout << "\n1 Г„Г®ГЎГ ГўГЁГІГј ГІГ®ГўГ Г°\n2 Г‘Г®Г§Г¤Г ГІГј Г§Г ГЄГ Г§\n3 Г„Г®ГЎГ ГўГЁГІГј ГЇГ®Г§ГЁГ¶ГЁГѕ\n4 Г‚Г»Г°ГіГ·ГЄГ \n0 Г‚Г»ГµГ®Г¤\n> ";
             cin >> ch;
 
             if (ch == 0) break;
@@ -114,7 +111,7 @@ int main()
                 string name;
                 double price;
                 int t;
-                cout << "Название цена тип(1-digital 2-physical): ";
+                cout << "ГЌГ Г§ГўГ Г­ГЁГҐ Г¶ГҐГ­Г  ГІГЁГЇ(1-digital 2-physical): ";
                 cin >> name >> price >> t;
 
                 Product* p = (t == 1)
@@ -126,7 +123,7 @@ int main()
             }
 
             if (ch == 2)
-                cout << "ID заказа: " << createOrder(c) << endl;
+                cout << "ID Г§Г ГЄГ Г§Г : " << createOrder(c) << endl;
 
             if (ch == 3) {
                 int o, p, q;
@@ -142,4 +139,5 @@ int main()
     catch (const exception& e) {
         cerr << e.what() << endl;
     }
+
 }
