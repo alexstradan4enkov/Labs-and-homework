@@ -22,19 +22,15 @@ public:
 
     virtual void save(pqxx::connection& c)
     {
-        try {
-            pqxx::work txn(c);
-            txn.exec(
-                "INSERT INTO products (name, price, product_type) VALUES (" +
-                txn.quote(name) + ", " +
-                txn.quote(price) + ", " +
-                txn.quote(type()) + ")"
-            );
-            txn.commit();
-            logAction("Добавлен продукт: " + name);
-        } catch (const exception& e) {
-            cerr << "Ошибка при добавлении продукта: " << e.what() << endl;
-        }
+        pqxx::work txn(c);
+        txn.exec(
+            "INSERT INTO products (name, price, product_type) VALUES (" +
+            txn.quote(name) + ", " +
+            txn.quote(price) + ", " +
+            txn.quote(type()) + ")"
+        );
+        txn.commit();
+        logAction("Добавлен продукт: " + name);
     }
 };
 
@@ -52,129 +48,102 @@ public:
 
 int createOrder(pqxx::connection& c)
 {
-    try {
-        pqxx::work txn(c);
-        auto r = txn.exec(
-            "INSERT INTO orders (order_date) VALUES (CURRENT_DATE) RETURNING order_id"
-        );
-        txn.commit();
-        logAction("Создан заказ");
-        return r[0][0].as<int>();
-    } catch (const exception& e) {
-        cerr << "Ошибка при создании заказа: " << e.what() << endl;
-        return -1;
-    }
+    pqxx::work txn(c);
+    auto r = txn.exec(
+        "INSERT INTO orders (order_date) VALUES (CURRENT_DATE) RETURNING order_id"
+    );
+    txn.commit();
+    logAction("Создан заказ");
+    return r[0][0].as<int>();
 }
 
 void addOrderItem(pqxx::connection& c, int oid, int pid, int qty)
 {
-    try {
-        pqxx::work txn(c);
-        auto r = txn.exec(
-            "SELECT price FROM products WHERE id=" + txn.quote(pid)
-        );
-        if (r.empty()) {
-            cerr << "Продукт с id=" << pid << " не найден." << endl;
-            return;
-        }
-        double price = r[0][0].as<double>();
-        double total = price * qty;
+    pqxx::work txn(c);
+    auto r = txn.exec(
+        "SELECT price FROM products WHERE id=" + txn.quote(pid)
+    );
+    double price = r[0][0].as<double>();
+    double total = price * qty;
 
-        txn.exec(
-            "INSERT INTO order_items (order_id, product_id, quantity, total_price) VALUES (" +
-            txn.quote(oid) + "," +
-            txn.quote(pid) + "," +
-            txn.quote(qty) + "," +
-            txn.quote(total) + ")"
-        );
-        txn.commit();
-        logAction("Добавлена позиция заказа");
-    } catch (const exception& e) {
-        cerr << "Ошибка при добавлении позиции: " << e.what() << endl;
-    }
+    txn.exec(
+        "INSERT INTO order_items (order_id, product_id, quantity, total_price) VALUES (" +
+        txn.quote(oid) + "," +
+        txn.quote(pid) + "," +
+        txn.quote(qty) + "," +
+        txn.quote(total) + ")"
+    );
+    txn.commit();
+    logAction("Добавлена позиция заказа");
 }
 
 void revenue(pqxx::connection& c)
 {
-    try {
-        pqxx::work txn(c);
-        auto r = txn.exec(
-            "SELECT name, SUM(total_price) AS revenue "
-            "FROM products p JOIN order_items oi ON p.id=oi.product_id "
-            "GROUP BY name"
-        );
+    pqxx::work txn(c);
+    auto r = txn.exec(
+        "SELECT name, SUM(total_price) AS revenue "
+        "FROM products p JOIN order_items oi ON p.id=oi.product_id "
+        "GROUP BY name"
+    );
 
-        cout << "\n--- Общая выручка по каждому товару ---\n";
-        for (auto row : r)
-            cout << row["name"].c_str()
-                 << " | Выручка: " << row["revenue"].as<double>() << endl;
-    } catch (const exception& e) {
-        cerr << "Ошибка при подсчёте выручки: " << e.what() << endl;
-    }
+    cout << "\n--- Общая выручка по каждому товару ---\n";
+    for (auto row : r)
+        cout << row["name"].c_str()
+        << " | Выручка: " << row["revenue"].as<double>() << endl;
 }
 
 void top3Products(pqxx::connection& c)
 {
-    try {
-        pqxx::work txn(c);
-        auto r = txn.exec(
-            "SELECT name, SUM(quantity) AS total_sold "
-            "FROM products p JOIN order_items oi ON p.id=oi.product_id "
-            "GROUP BY name "
-            "ORDER BY total_sold DESC "
-            "LIMIT 3"
-        );
+    pqxx::work txn(c);
+    auto r = txn.exec(
+        "SELECT name, SUM(quantity) AS total_sold "
+        "FROM products p JOIN order_items oi ON p.id=oi.product_id "
+        "GROUP BY name "
+        "ORDER BY total_sold DESC "
+        "LIMIT 3"
+    );
 
-        cout << "\n--- Топ-3 самых продаваемых товаров ---\n";
-        for (auto row : r)
-            cout << row["name"].c_str()
-                 << " | Продано: " << row["total_sold"].as<int>() << endl;
-    } catch (const exception& e) {
-        cerr << "Ошибка при подсчёте топ-3: " << e.what() << endl;
-    }
+    cout << "\n--- Топ-3 самых продаваемых товаров ---\n";
+    for (auto row : r)
+        cout << row["name"].c_str()
+        << " | Продано: " << row["total_sold"].as<int>() << endl;
 }
 
 void averageOrderValue(pqxx::connection& c)
 {
-    try {
-        pqxx::work txn(c);
-        auto r = txn.exec(
-            "SELECT AVG(order_total) FROM ("
-            "SELECT order_id, SUM(total_price) AS order_total "
-            "FROM order_items "
-            "GROUP BY order_id) t"
-        );
-cout << "\n--- Средняя стоимость заказа ---\n";
-        cout << r[0][0].as<double>() << endl;
-    } catch (const exception& e) {
-        cerr << "Ошибка при подсчёте средней стоимости заказа: " << e.what() << endl;
-    }
+    pqxx::work txn(c);
+    auto r = txn.exec(
+        "SELECT AVG(order_total) FROM ("
+        "SELECT order_id, SUM(total_price) AS order_total "
+        "FROM order_items "
+        "GROUP BY order_id) t"
+    );
+
+    cout << "\n--- Средняя стоимость заказа ---\n";
+    cout << r[0][0].as<double>() << endl;
 }
 
 void orderCountPerProduct(pqxx::connection& c)
 {
-    try {
-        pqxx::work txn(c);
-        auto r = txn.exec(
-            "SELECT name, COUNT(DISTINCT order_id) AS orders_count "
-            "FROM products p JOIN order_items oi ON p.id=oi.product_id "
-            "GROUP BY name"
-        );
+    pqxx::work txn(c);
+    auto r = txn.exec(
+        "SELECT name, COUNT(DISTINCT order_id) AS orders_count "
+        "FROM products p JOIN order_items oi ON p.id=oi.product_id "
+        "GROUP BY name"
+    );
 
-        cout << "\n--- Количество заказов для каждого товара ---\n";
-        for (auto row : r)
-            cout << row["name"].c_str()
-                 << " | Заказов: " << row["orders_count"].as<int>() << endl;
-    } catch (const exception& e) {
-        cerr << "Ошибка при подсчёте количества заказов: " << e.what() << endl;
-    }
+    cout << "\n--- Количество заказов для каждого товара ---\n";
+    for (auto row : r)
+        cout << row["name"].c_str()
+        << " | Заказов: " << row["orders_count"].as<int>() << endl;
 }
 
 int main()
-{
+{   
+    setlocale(LC_ALL, "Russian");
     try {
         pqxx::connection c(
-            "dbname=sales_db user=postgres host=localhost password=YOUR_PASSWORD"
+            "dbname=sales_db user=postgres password=GP1A042372 host=localhost"
         );
 
         cout << "Connected to " << c.dbname() << endl;
@@ -185,7 +154,6 @@ int main()
             cin >> ch;
 
             if (ch == 0) break;
-
             if (ch == 1) {
                 string name;
                 double price;
@@ -228,4 +196,3 @@ int main()
         cerr << e.what() << endl;
     }
 }
-
