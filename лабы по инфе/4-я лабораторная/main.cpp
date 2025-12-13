@@ -1,4 +1,3 @@
-саняя, [13.12.2025 16:08]
 #include <iostream>
 #include <pqxx/pqxx>
 #include <fstream>
@@ -145,8 +144,6 @@ void averageOrderValue(pqxx::connection& c)
             "FROM order_items "
             "GROUP BY order_id) t"
         );
-
-саняя, [13.12.2025 16:08]
 cout << "\n--- Средняя стоимость заказа ---\n";
         cout << r[0][0].as<double>() << endl;
     } catch (const exception& e) {
@@ -231,3 +228,4 @@ int main()
         cerr << e.what() << endl;
     }
 }
+
